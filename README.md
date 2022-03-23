@@ -1,2 +1,2 @@
 # Cleaner
-Lua class similar to Janitor/Maid that is useful for memory management and preventing memory leaks.
+Luau class that is useful for memory management and preventing memory leaks.
