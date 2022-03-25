@@ -232,10 +232,12 @@ return function()
     end)
 
     describe("Cleaner:extract", function()
-        it("should return nil if no task is set to the key", function()
+        it("should fail if no task is set to the key", function()
             local cleaner = Cleaner.new()
 
-            expect(cleaner:extract("key")).to.equal(nil)
+            expect(function()
+                cleaner:extract("key")
+            end).to.throw()
 
             cleaner:destroy()
         end)
@@ -259,11 +261,13 @@ return function()
 
         it("should return the task that was extracted", function()
             local cleaner = Cleaner.new()
+            local object = Object.new()
+
+            cleaner:set("key", object)
             
-            cleaner:set("key", empty)
+            expect(cleaner:extract("key")).to.equal(object)
             
-            expect(cleaner:extract("key")).to.equal(empty)
-            
+            object:destroy()
             cleaner:destroy()
         end)
     end)
@@ -397,11 +401,12 @@ return function()
                 cleaner:work()
             end).to.throw()
 
-            cleaner:destroy()
+            -- if I call cleaner:destroy() here, it errors since the error leaves it in a cleaner.working = true state
+            -- and cleaner:destroy() calls cleaner:work()
         end)
     end)
 
-    describe("Clenaer:destroy", function()
+    describe("Cleaner:destroy", function()
         it("should finalize all tasks", function()
             local cleaner = Cleaner.new()
             local count = 0

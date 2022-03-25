@@ -11,7 +11,7 @@ local DEFAULT_FINALIZERS = {
  
      ["Instance"] = game.Destroy,
  
-     ["RbxScriptConnection"] = Instance.new("BindableEvent").Event:Connect(function() end).Disconnect,
+     ["RBXScriptConnection"] = Instance.new("BindableEvent").Event:Connect(function() end).Disconnect,
 }
 
 local function handleTask(task, finalizer, ...)
@@ -25,6 +25,12 @@ end
 local ArgMap = newproxy()
 local KeyMap = newproxy()
 local TaskMap = newproxy()
+
+--[=[
+    Cleaner class to make memory management more efficient and avoid leaks
+
+    @class Cleaner
+]=]
 
 --[=[
     Task that can be passed to a variety of methods that can be cleaned up
@@ -48,23 +54,21 @@ local TaskMap = newproxy()
 ]=]
 
 --[=[
-    Cleaner class to make memory management more efficient and avoid leaks
-
-    @class Cleaner
-]=]
-
---[=[
     Will be set to true if the cleaner object is currently doing work
 
     @prop working boolean
     @readonly
     @within Cleaner
 ]=]
+
 local Cleaner = {}
 Cleaner.__index = Cleaner
 
 --[=[
-    @class Cleaner
+    Creates a new cleaner object
+
+    @function new
+    @within Cleaner
 ]=]
 function Cleaner.new()
     return setmetatable({
@@ -73,6 +77,16 @@ function Cleaner.new()
         [KeyMap] = {},
         [TaskMap] = {},
     }, Cleaner)
+end
+
+--[=[
+    Returns whether or not the passed argument is a cleaner
+
+    @param obj any
+    @return boolean
+]=]
+function Cleaner.is(obj)
+    return type(obj) == "table" and getmetatable(obj) == Cleaner or false
 end
 
 --[=[
@@ -91,13 +105,13 @@ function Cleaner:add(task, finalizer, ...)
     local taskMap = self[TaskMap]
 
     if not finalizer then
-        finalizer = (taskTypeof == "table" and task.destroy or task.Destroy) or DEFAULT_FINALIZERS[taskTypeof]
+        finalizer = (taskTypeof == "table" and (task.destroy or task.Destroy)) or DEFAULT_FINALIZERS[taskTypeof]
     end
 
     assert(finalizer, string.format(NO_FINALIZER_ERROR, taskString, taskTypeof))
     assert(not taskMap[task], string.format(DUPLICATE_TASK_ERROR, taskString, taskTypeof))
 
-    if select("n", ...) > 0 then
+    if table.pack(...).n > 0 then
         self[ArgMap][task] = {...}
     end
 
@@ -125,7 +139,9 @@ end
     @return Task
 ]=]
 function Cleaner:set(key, task, ...)
-    self:extract(key)
+    if self:get(key) then
+        self:finalize(key)
+    end
 
     self[KeyMap][key] = task
     self:add(task, ...)
@@ -183,7 +199,7 @@ function Cleaner:finalize(key, ...)
 
     local argMap, taskMap = self[ArgMap], self[TaskMap]
 
-    if select("n", ...) > 0 then
+    if table.pack(...).n > 0 then
         handleTask(task, taskMap[task], ...)
     else
         local args = argMap[task]
