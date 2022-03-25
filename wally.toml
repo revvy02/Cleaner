@@ -7,5 +7,5 @@ authors = ["revvy"]
 realm = "shared"
 registry = "https://github.com/upliftgames/wally-index"
 
-[dev-dependencies]
+[dependencies]
 TestEZ = "roblox/testez@0.4.1"
