@@ -27,12 +27,6 @@ local KeyMap = newproxy()
 local TaskMap = newproxy()
 
 --[=[
-    Cleaner class to make memory management more efficient and avoid leaks
-
-    @class Cleaner
-]=]
-
---[=[
     Task that can be passed to a variety of methods that can be cleaned up
 
     @type Task function | Instance | RbxScriptConnection | table
@@ -54,15 +48,20 @@ local TaskMap = newproxy()
 ]=]
 
 --[=[
+    Cleaner class to make memory management more efficient and avoid leaks
+
+    @class Cleaner
+]=]
+local Cleaner = {}
+Cleaner.__index = Cleaner
+
+--[=[
     Will be set to true if the cleaner object is currently doing work
 
     @prop working boolean
     @readonly
     @within Cleaner
 ]=]
-
-local Cleaner = {}
-Cleaner.__index = Cleaner
 
 --[=[
     Creates a new cleaner object
