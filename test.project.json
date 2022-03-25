@@ -5,7 +5,7 @@
         
       "ReplicatedStorage": {
         "DevPackages": {
-          "$path": "DevPackages"
+          "$path": "Packages"
         }
       },
 
