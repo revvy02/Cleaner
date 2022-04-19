@@ -170,7 +170,7 @@ function Cleaner:extract(key)
     local keyMap = self[KeyMap]
     local task = keyMap[key]
 
-    assert(task, string.format(INVALID_TASK_KEY_ERROR, key))
+    assert(task, string.format(INVALID_TASK_KEY_ERROR, tostring(key)))
 
     keyMap[key] = nil
     self[TaskMap][task] = nil
@@ -194,7 +194,7 @@ function Cleaner:finalize(key, ...)
     local keyMap = self[KeyMap]
     local task = keyMap[key]
     
-    assert(task, string.format(INVALID_TASK_KEY_ERROR, key))
+    assert(task, string.format(INVALID_TASK_KEY_ERROR, tostring(key)))
 
     local argMap, taskMap = self[ArgMap], self[TaskMap]
 
