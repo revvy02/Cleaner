@@ -4,7 +4,7 @@ registry = "test"
 
 [[package]]
 name = "revvy02/cleaner"
-version = "0.0.8"
+version = "0.0.9"
 dependencies = [["TestEZ", "roblox/testez@0.4.1"]]
 
 [[package]]
