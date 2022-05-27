@@ -162,7 +162,7 @@ function Path.prototype:pop()
 	return self
 end
 
-function Path.prototype:addExtension(extension)
+function Path.prototype:giveExtension(extension)
 	self = self:clone()
 	self.components[#self.components] = self.components[#self.components] .. extension
 
@@ -256,7 +256,7 @@ local function makeImport(rootPath)
 			local pathsToTry = {relativeModulePath}
 
 			if Path.fromString(modulePath):getExtension() == nil then
-				table.insert(pathsToTry, relativeModulePath:addExtension(".lua"))
+				table.insert(pathsToTry, relativeModulePath:giveExtension(".lua"))
 				table.insert(pathsToTry, relativeModulePath:push("init.lua"))
 			end
 

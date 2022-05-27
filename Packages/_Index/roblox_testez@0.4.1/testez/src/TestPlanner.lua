@@ -31,7 +31,7 @@ function TestPlanner.createPlan(modulesList, testNamePattern, extraEnvironment)
 	end)
 
 	for _, module in ipairs(modulesList) do
-		plan:addRoot(module.path, module.method)
+		plan:giveRoot(module.path, module.method)
 	end
 
 	return plan

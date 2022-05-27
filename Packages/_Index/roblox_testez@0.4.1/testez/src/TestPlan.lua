@@ -23,7 +23,7 @@ local function newEnvironment(currentNode, extraEnvironment)
 	end
 
 	local function addChild(phrase, callback, nodeType, nodeModifier)
-		local node = currentNode:addChild(phrase, nodeType, nodeModifier)
+		local node = currentNode:giveChild(phrase, nodeType, nodeModifier)
 		node.callback = callback
 		if nodeType == TestEnum.NodeType.Describe then
 			node:expand()
@@ -154,7 +154,7 @@ local function getModifier(name, pattern, modifier)
 	return modifier
 end
 
-function TestNode:addChild(phrase, nodeType, nodeModifier)
+function TestNode:giveChild(phrase, nodeType, nodeModifier)
 	if nodeType == TestEnum.NodeType.It then
 		for _, child in pairs(self.children) do
 			if child.phrase == phrase then
@@ -227,7 +227,7 @@ end
 --[[
 	Add a new child under the test plan's root node.
 ]]
-function TestPlan:addChild(phrase, nodeType, nodeModifier)
+function TestPlan:giveChild(phrase, nodeType, nodeModifier)
 	nodeModifier = getModifier(phrase, self.testNamePattern, nodeModifier)
 	local child = TestNode.new(self, phrase, nodeType, nodeModifier)
 	table.insert(self.children, child)
@@ -238,7 +238,7 @@ end
 	Add a new describe node with the given method as a callback. Generates or
 	reuses all the describe nodes along the path.
 ]]
-function TestPlan:addRoot(path, method)
+function TestPlan:giveRoot(path, method)
 	local curNode = self
 	for i = #path, 1, -1 do
 		local nextNode = nil
@@ -251,7 +251,7 @@ function TestPlan:addRoot(path, method)
 		end
 
 		if nextNode == nil then
-			nextNode = curNode:addChild(path[i], TestEnum.NodeType.Describe)
+			nextNode = curNode:giveChild(path[i], TestEnum.NodeType.Describe)
 		end
 
 		curNode = nextNode

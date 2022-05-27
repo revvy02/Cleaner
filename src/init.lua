@@ -84,7 +84,7 @@ end
     @return boolean
 ]=]
 function Cleaner.is(obj)
-    return type(obj) == "table" and getmetatable(obj) == Cleaner or false
+    return type(obj) == "table" and getmetatable(obj) == Cleaner
 end
 
 --[=[
@@ -142,7 +142,7 @@ function Cleaner:set(key, task, ...)
     end
 
     self[KeyMap][key] = task
-    self:add(task, ...)
+    self:give(task, ...)
 
     return task
 end

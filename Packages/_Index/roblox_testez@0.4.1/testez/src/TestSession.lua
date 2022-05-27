@@ -202,7 +202,7 @@ end
 	allows an otherwise empty describe node to report an error in a more natural
 	way.
 ]]
-function TestSession:addDummyError(phrase, message)
+function TestSession:giveDummyError(phrase, message)
 	self:pushNode({type = TestEnum.NodeType.It, phrase = phrase})
 	self:setError(message)
 	self:popNode()

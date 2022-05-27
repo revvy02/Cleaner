@@ -138,7 +138,7 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 	for _, hook in ipairs(lifecycleHooks:getBeforeAllHooks()) do
 		local success, errorMessage = runCallback(hook, "beforeAll hook: ")
 		if not success then
-			session:addDummyError("beforeAll", errorMessage)
+			session:giveDummyError("beforeAll", errorMessage)
 			halt = true
 		end
 	end
@@ -178,7 +178,7 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 	for _, hook in ipairs(lifecycleHooks:getAfterAllHooks()) do
 		local success, errorMessage = runCallback(hook, "afterAll hook: ")
 		if not success then
-			session:addDummyError("afterAll", errorMessage)
+			session:giveDummyError("afterAll", errorMessage)
 		end
 	end
 
