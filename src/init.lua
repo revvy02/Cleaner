@@ -98,7 +98,7 @@ end
     @error "No finalizer found for %s (typeof: %s)"
     @error "Attempted to add duplicate %s (typeof: %s)"
 ]=]
-function Cleaner:add(task, finalizer, ...)
+function Cleaner:give(task, finalizer, ...)
     local taskString, taskTypeof = tostring(task), typeof(task)
     local taskMap = self[TaskMap]
 
